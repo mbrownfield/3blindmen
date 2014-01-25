@@ -126,7 +126,7 @@ public class MazeMakerController : MonoBehaviour
     {
         if (grid[(int)cell.x, (int)cell.y, (int)cell.z] == CellType.Nothing)
         {
-            int randomChoice = (int)(Random.Range(0, 999999999));
+            int randomChoice = (int)(Random.Range(0, 4));
             if (randomChoice == 0 || openPaths < 1)
             {
                 grid[(int)cell.x, (int)cell.y, (int)cell.z] = CellType.Open;
