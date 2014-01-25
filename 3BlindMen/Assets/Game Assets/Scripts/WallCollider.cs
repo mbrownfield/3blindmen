@@ -5,10 +5,16 @@ public class WallCollider : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.LogWarning("COLLIDING");
         if (other.CompareTag("Wall"))
         {
-            Debug.LogWarning("COLLIDING WALL");
+            (GameObject.FindGameObjectWithTag("GUITimer").GetComponent("TimerGUI") as TimerGUI).remainingTime = 0;
+            (GameObject.FindGameObjectWithTag("GUITimer").GetComponent("TimerGUI") as TimerGUI).hitAWall = true;
+        }
+        if (other.CompareTag("Ending"))
+        {
+            (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).ShowVictory();
+            (GameObject.FindGameObjectWithTag("Player").GetComponent("PlayerController") as PlayerController).SetLose();
+            (GameObject.FindGameObjectWithTag("GUITimer").GetComponent("TimerGUI") as TimerGUI).Stop();
         }
     }
 }

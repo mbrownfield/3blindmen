@@ -3,12 +3,17 @@ using System.Collections;
 
 public class TimerGUI : MonoBehaviour
 {
-    float remainingTime;
+    public float remainingTime;
     const int TIME = 5;
+    bool tick = false;
+    public bool hitAWall = false;
 
     void Update()
     {
-        remainingTime -= Time.deltaTime;
+        if (tick)
+        {
+            remainingTime -= Time.deltaTime;
+        }
         if (remainingTime > 0)
         {
             if ((Mathf.Floor(remainingTime % 60)) > 9)
@@ -27,7 +32,7 @@ public class TimerGUI : MonoBehaviour
         else
         {
             guiText.text = "";
-            (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).ShowGameOver();
+            (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).ShowGameOver(hitAWall);
             (GameObject.FindGameObjectWithTag("Player").GetComponent("PlayerController") as PlayerController).SetLose();
         }
         if (remainingTime < -3)
@@ -35,18 +40,22 @@ public class TimerGUI : MonoBehaviour
             remainingTime = TIME;
             (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).Restart();
             (GameObject.FindGameObjectWithTag("Player").GetComponent("PlayerController") as PlayerController).Restart();
-
         }
     }
 
-    void Start()
+    public void Start()
     {
         remainingTime = TIME;
+        tick = true;
+    }
+
+    public void Stop()
+    {
+        tick = false;
     }
 
     internal void HideTimer()
     {
         guiText.text = "";
-        remainingTime = -999;
     }
 }

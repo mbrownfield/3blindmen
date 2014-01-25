@@ -62,19 +62,19 @@ public class MazeMakerController : MonoBehaviour
         {
             for (int j = 0; j <= MAZE_SIZE; j++)
             {
-                Instantiate(wall, new Vector3(0,i, j), Quaternion.identity);
-                Instantiate(wall, new Vector3(MAZE_SIZE, i, j), Quaternion.identity);
-                Instantiate(wall, new Vector3(i, 0, j), Quaternion.identity);
-                Instantiate(wall, new Vector3(i, MAZE_SIZE, j), Quaternion.identity);
-                Instantiate(wall, new Vector3(i, j, 0), Quaternion.identity);
-                Instantiate(wall, new Vector3(i, j, MAZE_SIZE), Quaternion.identity);
+                Network.Instantiate(wall, new Vector3(0,i, j), Quaternion.identity,0);
+                Network.Instantiate(wall, new Vector3(MAZE_SIZE, i, j), Quaternion.identity,0);
+                Network.Instantiate(wall, new Vector3(i, 0, j), Quaternion.identity,0);
+                Network.Instantiate(wall, new Vector3(i, MAZE_SIZE, j), Quaternion.identity,0);
+                Network.Instantiate(wall, new Vector3(i, j, 0), Quaternion.identity,0);
+                Network.Instantiate(wall, new Vector3(i, j, MAZE_SIZE), Quaternion.identity,0);
                 for (int k = 0; k < MAZE_SIZE; k++)
                 {
                     if (i < MAZE_SIZE && j < MAZE_SIZE)
                     {
                         if (grid[i, j, k] == CellType.Nothing)
                         {
-                            Instantiate(wall, new Vector3(i, j, k), Quaternion.identity);
+                            Network.Instantiate(wall, new Vector3(i, j, k), Quaternion.identity, 0);
                             grid[i, j, k] = CellType.Wall;
                         }
                     }
@@ -126,7 +126,7 @@ public class MazeMakerController : MonoBehaviour
     {
         if (grid[(int)cell.x, (int)cell.y, (int)cell.z] == CellType.Nothing)
         {
-            int randomChoice = (int)(Random.Range(0, 4));
+            int randomChoice = (int)(Random.Range(0, 5));
             if (randomChoice == 0 || openPaths < 1)
             {
                 grid[(int)cell.x, (int)cell.y, (int)cell.z] = CellType.Open;
@@ -136,7 +136,7 @@ public class MazeMakerController : MonoBehaviour
             else
             {
                 grid[(int)cell.x, (int)cell.y, (int)cell.z] = CellType.Wall;
-                Instantiate(wall, cell, Quaternion.identity);
+                Network.Instantiate(wall, cell, Quaternion.identity, 0);
             }
         }
     }

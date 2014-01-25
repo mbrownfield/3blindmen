@@ -10,9 +10,12 @@ public class GameOverGUI : MonoBehaviour {
     }
 
 
-    public void ShowGameOver()
+    public void ShowGameOver(bool hitAWall)
     {
-        guiText.text = "YOU RAN OUT OF TIME";
+        if (hitAWall)
+            guiText.text = "YOU HIT A WALL";
+        else
+            guiText.text = "YOU RAN OUT OF TIME";
     }
 
     internal void Restart()
@@ -32,5 +35,10 @@ public class GameOverGUI : MonoBehaviour {
         {
             Application.LoadLevel(Application.loadedLevelName);
         }
+    }
+
+    internal void ShowVictory()
+    {
+        guiText.text = "YOU WIN!";
     }
 }
