@@ -5,14 +5,15 @@ using System.Collections.Generic;
 public class MazeMakerController : MonoBehaviour
 {
     public GameObject wall;
-    public GameObject light;
 
     const int MAZE_SIZE = 10;
     CellType[, ,] grid = new CellType[MAZE_SIZE, MAZE_SIZE, MAZE_SIZE];
-    int openPaths = 0;
-    //int remainingSquares = MAZE_SIZE * MAZE_SIZE * MAZE_SIZE;
+    int openPathsStart = 1;
+    int openPathsEnd = 1;
 
-    List<Vector3> cellsToGenerate;
+
+    List<Vector3> cellsToGenerateStart;
+    List<Vector3> cellsToGenerateEnd;
 
     enum CellType
     {
@@ -24,7 +25,8 @@ public class MazeMakerController : MonoBehaviour
     void Start()
     {
         //Initialize cells queue
-        cellsToGenerate = new List<Vector3>();
+        cellsToGenerateStart = new List<Vector3>();
+        cellsToGenerateEnd = new List<Vector3>();
 
         // Initialize the grid so each cell is Nothing
         for (int i = 0; i < MAZE_SIZE; i++)
@@ -39,11 +41,20 @@ public class MazeMakerController : MonoBehaviour
         }
 
         // Set the start point
-        grid[MAZE_SIZE / 2, MAZE_SIZE / 2, MAZE_SIZE / 2] = CellType.Start;
-        cellsToGenerate.Add(new Vector3(MAZE_SIZE / 2, MAZE_SIZE / 2, MAZE_SIZE / 2));
-        while (cellsToGenerate.Count > 0)
+        grid[1, 1, 1] = CellType.Start;
+        grid[MAZE_SIZE - 1, MAZE_SIZE - 1, MAZE_SIZE - 1] = CellType.End;
+        cellsToGenerateStart.Add(new Vector3(1, 1, 1));
+        cellsToGenerateEnd.Add(new Vector3(MAZE_SIZE - 1, MAZE_SIZE - 1, MAZE_SIZE - 1));
+        while (cellsToGenerateStart.Count > 0 || cellsToGenerateEnd.Count > 0)
         {
-            rGenerateMaze();
+            if (cellsToGenerateStart.Count > 0)
+            {
+                rGenerateMaze(cellsToGenerateStart, ref openPathsStart);
+            }
+            else
+            {
+                rGenerateMaze(cellsToGenerateEnd, ref openPathsEnd);
+            }
         }
 
         // generate outer walls
@@ -76,34 +87,34 @@ public class MazeMakerController : MonoBehaviour
     /// Recursively generates the maze given a start point.
     /// </summary>
     /// <param name="currentCell">Cell to start.</param>
-    void rGenerateMaze()
+    void rGenerateMaze(List<Vector3> cellsToGenerate, ref int openPaths)
     {
         Vector3 currentCell = cellsToGenerate[0];
         cellsToGenerate.RemoveAt(0);
-        openPaths += 6;
-        if (currentCell.x + 1 < MAZE_SIZE - 1)
+        openPaths--;
+        if (currentCell.x + 1 < MAZE_SIZE)
         {
-            createWallOpenRandom(new Vector3(currentCell.x + 1, currentCell.y, currentCell.z));
+            createWallOpenRandom(cellsToGenerate, new Vector3(currentCell.x + 1, currentCell.y, currentCell.z), ref openPaths);
         }
         if (currentCell.x - 1 > 0)
         {
-            createWallOpenRandom(new Vector3(currentCell.x - 1, currentCell.y, currentCell.z));
+            createWallOpenRandom(cellsToGenerate, new Vector3(currentCell.x - 1, currentCell.y, currentCell.z), ref openPaths);
         }
-        if (currentCell.y + 1 < MAZE_SIZE - 1)
+        if (currentCell.y + 1 < MAZE_SIZE)
         {
-            createWallOpenRandom(new Vector3(currentCell.x, currentCell.y + 1, currentCell.z));
+            createWallOpenRandom(cellsToGenerate, new Vector3(currentCell.x, currentCell.y + 1, currentCell.z), ref openPaths);
         }
         if (currentCell.y - 1 > 0)
         {
-            createWallOpenRandom(new Vector3(currentCell.x, currentCell.y - 1, currentCell.z));
+            createWallOpenRandom(cellsToGenerate, new Vector3(currentCell.x, currentCell.y - 1, currentCell.z), ref openPaths);
         }
-        if (currentCell.z + 1 < MAZE_SIZE - 1)
+        if (currentCell.z + 1 < MAZE_SIZE)
         {
-            createWallOpenRandom(new Vector3(currentCell.x, currentCell.y, currentCell.z + 1));
+            createWallOpenRandom(cellsToGenerate, new Vector3(currentCell.x, currentCell.y, currentCell.z + 1), ref openPaths);
         }
         if (currentCell.z - 1 > 0)
         {
-            createWallOpenRandom(new Vector3(currentCell.x, currentCell.y, currentCell.z - 1));
+            createWallOpenRandom(cellsToGenerate, new Vector3(currentCell.x, currentCell.y, currentCell.z - 1), ref openPaths);
         }
     }
 
@@ -111,26 +122,22 @@ public class MazeMakerController : MonoBehaviour
     /// Creates the cell and sets it to either a wall or an open space.
     /// </summary>
     /// <param name="cell">Cell.</param>
-    void createWallOpenRandom(Vector3 cell)
+    void createWallOpenRandom(List<Vector3> cellsToGenerate, Vector3 cell, ref int openPaths)
     {
         if (grid[(int)cell.x, (int)cell.y, (int)cell.z] == CellType.Nothing)
         {
-            int randomChoice = (int)(Random.Range(0, 5));
-            if (randomChoice == 0 || openPaths == 0)
+            int randomChoice = (int)(Random.Range(0, 999999999));
+            if (randomChoice == 0 || openPaths < 1)
             {
                 grid[(int)cell.x, (int)cell.y, (int)cell.z] = CellType.Open;
                 cellsToGenerate.Add(cell);
+                openPaths++;
             }
             else
             {
                 grid[(int)cell.x, (int)cell.y, (int)cell.z] = CellType.Wall;
                 Instantiate(wall, cell, Quaternion.identity);
-                openPaths--;
             }
-        }
-        else
-        {
-            openPaths--;
         }
     }
 }
