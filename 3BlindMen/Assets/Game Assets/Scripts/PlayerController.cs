@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
     enum State
     {
-        Idle, Rotating, Moving
+        Idle, Rotating, Moving, Lose
     };
 
     State currentState = State.Idle;
@@ -15,9 +15,15 @@ public class PlayerController : MonoBehaviour {
 
     float remainingRotation;
     float remainingMovement;
+    private int lives = 3;
 
 	
 	// Update is called once per frame
+    public void SetLose()
+    {
+        currentState = State.Lose;
+    }
+
 	void Update () {
         switch (currentState)
         {
@@ -83,4 +89,20 @@ public class PlayerController : MonoBehaviour {
                 break;
         };
 	}
+
+    internal void Restart()
+    {
+        lives--;
+        if (lives > 0)
+        {
+            transform.position = new Vector3(1, 1, 1);
+            currentState = State.Idle;
+            transform.rotation = Quaternion.identity;
+        }
+        else
+        {
+            (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).ShowGameOverForGood();
+            (GameObject.FindGameObjectWithTag("GUITimer").GetComponent("TimerGUI") as TimerGUI).HideTimer();
+        }
+    }
 }
