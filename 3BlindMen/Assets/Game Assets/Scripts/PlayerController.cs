@@ -103,6 +103,7 @@ public class PlayerController : MonoBehaviour {
         {
             (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).ShowGameOverForGood();
             (GameObject.FindGameObjectWithTag("GUITimer").GetComponent("TimerGUI") as TimerGUI).HideTimer();
+            (GameObject.FindGameObjectWithTag("GUITimer").GetComponent("TimerGUI") as TimerGUI).remainingTime = -1;
         }
     }
 }

@@ -40,5 +40,6 @@ public class GameOverGUI : MonoBehaviour {
     internal void ShowVictory()
     {
         guiText.text = "YOU WIN!";
+        gameOver = true;
     }
 }

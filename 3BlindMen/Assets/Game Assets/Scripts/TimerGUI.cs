@@ -29,15 +29,16 @@ public class TimerGUI : MonoBehaviour
                     (Mathf.Floor(remainingTime % 60)).ToString());
             }
         }
-        else
+        else if (!(GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).GameOver)
         {
             guiText.text = "";
             (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).ShowGameOver(hitAWall);
             (GameObject.FindGameObjectWithTag("Player").GetComponent("PlayerController") as PlayerController).SetLose();
         }
-        if (remainingTime < -3)
+        if (remainingTime < -3 && !(GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).GameOver)
         {
             remainingTime = TIME;
+            hitAWall = false;
             (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).Restart();
             (GameObject.FindGameObjectWithTag("Player").GetComponent("PlayerController") as PlayerController).Restart();
         }
