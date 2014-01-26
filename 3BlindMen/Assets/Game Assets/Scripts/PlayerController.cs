@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour {
     State currentState = State.Idle;
     Vector3 rotationalVelocity;
 
-    const int ROTATION_SPEED = 15;
+    const int ROTATION_SPEED = 10;
     const float MOVEMENT_SPEED = 0.2f;
 
     float remainingRotation;

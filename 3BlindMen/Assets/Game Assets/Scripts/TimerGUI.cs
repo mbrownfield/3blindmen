@@ -4,7 +4,7 @@ using System.Collections;
 public class TimerGUI : MonoBehaviour
 {
     public float remainingTime;
-    const int TIME = 5;
+    public int time;
     bool tick = false;
     public bool hitAWall = false;
 
@@ -37,7 +37,7 @@ public class TimerGUI : MonoBehaviour
         }
         if (remainingTime < -3 && !(GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).GameOver)
         {
-            remainingTime = TIME;
+            remainingTime = time;
             hitAWall = false;
             (GameObject.FindGameObjectWithTag("GUIGameOver").GetComponent("GameOverGUI") as GameOverGUI).Restart();
             (GameObject.FindGameObjectWithTag("Player").GetComponent("PlayerController") as PlayerController).Restart();
@@ -46,7 +46,7 @@ public class TimerGUI : MonoBehaviour
 
     public void Start()
     {
-        remainingTime = TIME;
+        remainingTime = time;
         tick = true;
     }
 
